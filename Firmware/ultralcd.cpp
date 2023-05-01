@@ -7040,7 +7040,14 @@ static bool check_file(const char* filename) {
 		menu_progressbar_update(card.get_sdpos() - startPos);
 		card.sdprinting = true;
 		get_command();
+#ifndef ENABLE_GCODE_REPEAT_MARKERS
+		// This solution is a temporary fix.
+		// Using M808 L0 to create an infinite loop will indefinitely prevent the
+		// check_commands() function from executing
 		result = check_commands();
+#else
+		result = true;
+#endif
 #ifdef CMDBUFFER_DEBUG
 		// Kick watchdog because the file check is very slow
 		// with the CMDBUFFER_DEBUG enabled

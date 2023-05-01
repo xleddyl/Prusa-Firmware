@@ -166,6 +166,7 @@ set(FW_SOURCES
     Prusa_farm.cpp
     qr_solve.cpp
     rbuf.c
+    repeat.cpp
     Sd2Card.cpp
     SdBaseFile.cpp
     SdFatUtil.cpp

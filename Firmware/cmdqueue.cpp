@@ -6,6 +6,10 @@
 #include "Prusa_farm.h"
 #include "meatpack.h"
 
+#ifdef ENABLE_GCODE_REPEAT_MARKERS
+#include "repeat.h"
+#endif
+
 // Reserve BUFSIZE lines of length MAX_CMD_SIZE plus CMDBUFFER_RESERVE_FRONT.
 char cmdbuffer[BUFSIZE * (MAX_CMD_SIZE + 1) + CMDBUFFER_RESERVE_FRONT];
 // Head of the circular buffer, where to read.
@@ -614,6 +618,9 @@ void get_command()
 //      SERIAL_ECHOPGM("buflen:");
 //      MYSERIAL.print(buflen+1);
       sd_count.value = 0;
+
+      // M808 L saves the sdpos of the next line. M808 loops to a new sdpos.
+      repeat.early_parse_M808(cmdbuffer+bufindw+CMDHDRSIZE);
 
       cli();
       // This block locks the interrupts globally for 3.56 us,

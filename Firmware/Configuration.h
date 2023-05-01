@@ -448,6 +448,8 @@ your extruder heater takes 2 minutes to hit the target on heating.
 #endif // ENABLE_AUTO_BED_LEVELING
 #endif // CUSTOM_M_CODES
 
+// Enable G code M808 to set repeat markers and do looping
+#define ENABLE_GCODE_REPEAT_MARKERS
 
 // Host Keepalive
 //

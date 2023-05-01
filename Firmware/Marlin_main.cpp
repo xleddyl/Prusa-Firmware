@@ -128,6 +128,10 @@
 
 #include "cmdqueue.h"
 
+#ifdef ENABLE_GCODE_REPEAT_MARKERS
+#include "repeat.h"
+#endif
+
 //Macro for print fan speed
 #define FAN_PULSE_WIDTH_LIMIT ((fanSpeed > 100) ? 3 : 4) //time in ms
 
@@ -148,6 +152,10 @@
 //===========================================================================
 #ifdef SDSUPPORT
 CardReader card;
+#endif
+
+#ifdef ENABLE_GCODE_REPEAT_MARKERS
+Repeat repeat;
 #endif
 
 uint8_t mbl_z_probe_nr = 3; //numer of Z measurements for each point in mesh bed leveling calibration
@@ -3956,6 +3964,7 @@ extern uint8_t st_backlash_y;
 //!@n M552 - Set IP address
 //!@n M600 - Pause for filament change X[pos] Y[pos] Z[relative lift] E[initial retract] L[later retract distance for removal]
 //!@n M605 - Set dual x-carriage movement mode: S<mode> [ X<duplication x-offset> R<duplication temp offset> ]
+//!@n M808 - Set repeat markers and do looping L[count] (L and L0 for infinite loop)
 //!@n M850 - Set sheet data S[id] Z[offset] L[label] B[bed_temp] P[PINDA_TEMP]
 //!@n M860 - Wait for PINDA thermistor to reach target temperature.
 //!@n M861 - Set / Read PINDA temperature compensation offsets
@@ -7704,6 +7713,19 @@ Sigma_Exit:
     }
     break;
   
+#ifdef ENABLE_GCODE_REPEAT_MARKERS
+  case 808: {
+    //! ### M808 - Set repeat markers and do looping
+    //! //!@n M808 - Set repeat markers and do looping L[count] (L and L0 for infinite loop)
+
+    // M808 handled in cmdqueue since it has to mess with sd index.
+    if (code_seen('K')) {
+      repeat.cancel();
+    }
+    break;
+  }
+#endif // ENABLE_GCODE_REPEAT_MARKERS
+
   case 850: {
 	//! ### M850 - set sheet parameters
 	//! //!@n M850 - Set sheet data S[id] Z[offset] L[label] B[bed_temp] P[PINDA_TEMP]
